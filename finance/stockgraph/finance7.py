@@ -12,7 +12,10 @@ def compile_data():
 
     main_df = pd.DataFrame()
     for count, ticker in enumerate(tickers): # for each item in tickers
-        df = pd.read_csv('stock_dfs/{}.csv'.format(ticker))
+        try:
+            df = pd.read_csv('stock_dfs/{}.csv'.format(ticker))
+        except:
+            continue
         df.set_index('Date', inplace=True)
 
         df.rename(columns = {'Adj Close': ticker}, inplace = True)
@@ -21,7 +24,10 @@ def compile_data():
         if main_df.empty:
             main_df = df
         else:
-            main_df = main_df.join(df, how='outer')
+            try:
+                main_df = main_df.join(df, how='outer')
+            except:
+                pass
         if count % 10 == 0:
             print(count)
     print(main_df.head())
